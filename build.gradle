@@ -12,6 +12,7 @@ repositories {
 
 dependencies {
     implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'io.github.chronosx88:kademliadht:1.0'
 }
 
 jar {

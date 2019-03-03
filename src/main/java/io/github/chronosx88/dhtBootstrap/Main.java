@@ -1,15 +1,19 @@
 package io.github.chronosx88.dhtBootstrap;
 
-import io.github.chronosx88.dhtBootstrap.kademlia.JKademliaNode;
-import io.github.chronosx88.dhtBootstrap.kademlia.node.KademliaId;
+import io.github.chronosx88.kademliadht.DefaultConfiguration;
+import io.github.chronosx88.kademliadht.JKademliaNode;
+import io.github.chronosx88.kademliadht.node.KademliaId;
+import io.github.chronosx88.kademliadht.node.Node;
 
 import java.io.IOException;
+import java.net.Inet4Address;
 
 public class Main {
     private static JKademliaNode node;
     public static void main(String[] args) {
         try {
-            node = new JKademliaNode("Main Bootstrap Node", new KademliaId("D65D56E189E513A6AB8E38370E6B33386EB639D6"), 7243);
+            KademliaId kadID = new KademliaId("sgCZ+fg49g4N8FU43kW84cNVPTw=");
+            node = new JKademliaNode("Main Bootstrap Node", new Node(kadID, Inet4Address.getLocalHost(), 7243), 7243, new DefaultConfiguration());
             System.out.println(node.getNode().getNodeId().toString());
         } catch (IOException e) {
             e.printStackTrace();
