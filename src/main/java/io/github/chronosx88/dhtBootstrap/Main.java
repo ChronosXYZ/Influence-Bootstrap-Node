@@ -47,7 +47,7 @@ public class Main {
                     .storage(
                             new StorageDisk(
                                     peerID,
-                                    new File(System.getProperty("user.home") + "/.local/share"),
+                                    new File(DATA_DIR_PATH),
                                     new RSASignatureFactory()
                             )
                     ).start();
