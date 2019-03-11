@@ -14,8 +14,8 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'net.tomp2p:tomp2p-all:5.0-Beta8'
+    implementation 'org.slf4j:slf4j-log4j12:+'
 }
 
 jar {

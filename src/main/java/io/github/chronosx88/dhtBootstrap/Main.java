@@ -19,6 +19,7 @@ public class Main {
 
     public static void main(String[] args) {
         props = new Properties();
+        org.apache.log4j.BasicConfigurator.configure();
         File dataDir = new File(DATA_DIR_PATH);
         File config = new File(DATA_DIR_PATH + "config.properties");
         try {
