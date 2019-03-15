@@ -3,8 +3,11 @@ package io.github.chronosx88.dhtBootstrap;
 import net.tomp2p.connection.RSASignatureFactory;
 import net.tomp2p.dht.PeerBuilderDHT;
 import net.tomp2p.dht.PeerDHT;
+import net.tomp2p.nat.PeerBuilderNAT;
 import net.tomp2p.p2p.PeerBuilder;
 import net.tomp2p.peers.Number160;
+import net.tomp2p.relay.RelayType;
+import net.tomp2p.relay.tcp.TCPRelayServerConfig;
 import net.tomp2p.storage.StorageDisk;
 
 import java.io.*;
@@ -52,6 +55,9 @@ public class Main {
                                     new RSASignatureFactory()
                             )
                     ).start();
+            new PeerBuilderNAT(peerDHT.peer())
+                    .addRelayServerConfiguration(RelayType.OPENTCP, new TCPRelayServerConfig())
+                    .start();
         } catch (IOException e) {
             e.printStackTrace();
         }
