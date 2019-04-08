@@ -47,16 +47,24 @@ class StorageBerkeleyDB(peerId: Number160, path : File, signatureFactory: Signat
         val envConfig = EnvironmentConfig()
         envConfig.allowCreate = true
         dbEnvironment = Environment(path, envConfig)
-        val dbConfig = DatabaseConfig()
-        dbConfig.allowCreate = true
+        val configMap : HashMap<String, com.sleepycat.je.DatabaseConfig> = HashMap()
 
-        dataMapDB = dbEnvironment.openDatabase(null, "dataMap_$peerId", dbConfig)
-        timeoutMapDB = dbEnvironment.openDatabase(null, "timeoutMap_$peerId", dbConfig)
-        timeoutMapRevDB = dbEnvironment.openDatabase(null, "timeoutMapRev_$peerId", dbConfig)
-        protectedDomainMapDB = dbEnvironment.openDatabase(null, "protectedDomainMap_$peerId", dbConfig)
-        protectedEntryMapDB = dbEnvironment.openDatabase(null, "protectedEntryMap_$peerId", dbConfig)
-        responsibilityMapDB = dbEnvironment.openDatabase(null, "responsibilityMap_$peerId", dbConfig)
-        responsibilityMapRevDB = dbEnvironment.openDatabase(null, "responsibilityMapRev_$peerId", dbConfig)
+        val compareNumber640 = CompareNumber640()
+        val compareLong = CompareLong()
+        configMap["dataMapConfig"] = DatabaseConfig().setBtreeComparator(compareNumber640)
+        configMap["dataMapConfig"]!!.allowCreate = true
+        configMap["timeoutMapRevConfig"] = DatabaseConfig().setBtreeComparator(compareLong)
+        configMap["timeoutMapRevConfig"]!!.allowCreate = true
+        configMap["other"] = DatabaseConfig()
+        configMap["other"]!!.allowCreate = true
+
+        dataMapDB = dbEnvironment.openDatabase(null, "dataMap_$peerId", configMap["dataMapConfig"])
+        timeoutMapDB = dbEnvironment.openDatabase(null, "timeoutMap_$peerId", configMap["other"])
+        timeoutMapRevDB = dbEnvironment.openDatabase(null, "timeoutMapRev_$peerId", configMap["timeoutMapRevConfig"])
+        protectedDomainMapDB = dbEnvironment.openDatabase(null, "protectedDomainMap_$peerId", configMap["other"])
+        protectedEntryMapDB = dbEnvironment.openDatabase(null, "protectedEntryMap_$peerId", configMap["other"])
+        responsibilityMapDB = dbEnvironment.openDatabase(null, "responsibilityMap_$peerId", configMap["other"])
+        responsibilityMapRevDB = dbEnvironment.openDatabase(null, "responsibilityMapRev_$peerId", configMap["other"])
 
         storageCheckIntervalMillis = 60 * 1000
 
