@@ -20,14 +20,14 @@ sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
-    maven {
+    /*maven {
         url "http://tomp2p.net/dev/mvn/"
-    }
+    }*/
 }
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-    implementation 'net.tomp2p:tomp2p-all:5.0-Beta8'
+    //implementation 'net.tomp2p:tomp2p-all:5.0-Beta8'
     implementation 'org.slf4j:slf4j-log4j12:+'
 }
 

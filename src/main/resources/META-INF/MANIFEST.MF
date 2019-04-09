@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Class-Path: json-simple-1.1.jar kotlin-stdlib-common-1.3.21.jar tomp2p
+ -all-5.0-Beta8.jar tomp2p-tracker-5.0-Beta8.jar netty-buffer-4.0.28.F
+ inal.jar log4j-1.2.17.jar annotations-13.0.jar tomp2p-dht-5.0-Beta8.j
+ ar netty-common-4.0.28.Final.jar kotlin-stdlib-1.3.21.jar gcm-server-
+ 1.0.2.jar tomp2p-storage-5.0-Beta8.jar slf4j-log4j12-1.8.0-beta4.jar 
+ weupnp-0.1.2.jar slf4j-api-1.8.0-beta4.jar tomp2p-replication-5.0-Bet
+ a8.jar kotlin-stdlib-jdk8-1.3.21.jar tomp2p-nat-5.0-Beta8.jar netty-t
+ ransport-4.0.28.Final.jar kotlin-stdlib-jdk7-1.3.21.jar tomp2p-androi
+ d-5.0-Beta8.jar tomp2p-core-5.0-Beta8.jar mapdb-1.0.6.jar
+Main-Class: io.github.chronosx88.MainKt
+

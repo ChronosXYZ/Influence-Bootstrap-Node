@@ -2,22 +2,15 @@ package io.github.chronosx88.dhtBootstrap
 
 import com.sleepycat.bind.EntryBinding
 import com.sleepycat.je.DatabaseEntry
-
+import io.netty.buffer.Unpooled
 import net.tomp2p.connection.SignatureFactory
 import net.tomp2p.storage.AlternativeCompositeByteBuf
 import net.tomp2p.storage.Data
-
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
-import java.io.IOException
-import java.io.OutputStream
-import java.io.Serializable
+import org.slf4j.LoggerFactory
+import java.io.*
 import java.nio.ByteBuffer
 import java.security.InvalidKeyException
 import java.security.SignatureException
-
-import io.netty.buffer.Unpooled
-import org.slf4j.LoggerFactory
 
 class DataSerializer(private val signatureFactory: SignatureFactory) : EntryBinding<Data>, Serializable {
     private val LOG_TAG = "DataSerializer"
@@ -47,10 +40,10 @@ class DataSerializer(private val signatureFactory: SignatureFactory) : EntryBind
         if (!retVal) {
             LOG.error("# ERROR: Data could not be deserialized!")
         }
-        retVal = data.decodeDone(buf, signatureFactory)
+        /*retVal = data.decodeDone(buf, signatureFactory)
         if (!retVal) {
             LOG.error("# ERROR: Signature could not be read!")
-        }
+        }*/
         return data
     }
 
@@ -68,8 +61,8 @@ class DataSerializer(private val signatureFactory: SignatureFactory) : EntryBind
             // from memory
             writeData(out, data.toByteBuffers())
             // rest
-            data.encodeDone(acb, signatureFactory)
-            writeData(out, acb.nioBuffers())
+            //data.encodeDone(acb, signatureFactory)
+            //writeData(out, acb.nioBuffers())
         } catch (e: SignatureException) {
             e.printStackTrace()
         } catch (e: InvalidKeyException) {

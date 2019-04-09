@@ -9,13 +9,11 @@ import net.tomp2p.peers.Number160
 import net.tomp2p.relay.RelayType
 import net.tomp2p.relay.tcp.TCPRelayServerConfig
 import net.tomp2p.replication.AutoReplication
-
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileWriter
 import java.io.IOException
-import java.util.Properties
-import java.util.UUID
+import java.util.*
 
 
 var peerDHT: PeerDHT? = null
@@ -64,6 +62,6 @@ fun main() {
         e.printStackTrace()
     }
 
-    //val replication = AutoReplication(peerDHT!!.peer())
-    //replication.start()
+    val replication = AutoReplication(peerDHT!!.peer())
+    replication.start()
 }
