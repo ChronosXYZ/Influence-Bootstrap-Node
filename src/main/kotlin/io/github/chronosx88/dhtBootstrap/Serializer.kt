@@ -2,12 +2,7 @@ package io.github.chronosx88.dhtBootstrap
 
 import com.sleepycat.bind.EntryBinding
 import com.sleepycat.je.DatabaseEntry
-
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
-import java.io.IOException
-import java.io.ObjectInputStream
-import java.io.ObjectOutputStream
+import java.io.*
 
 class Serializer<T> : EntryBinding<T> {
     fun serialize(obj: T): ByteArray {
