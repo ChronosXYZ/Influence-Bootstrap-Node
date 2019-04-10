@@ -1,6 +1,6 @@
 # Influence Bootstrap Node
 
-This is the main node of the network messenger Influence.  
+This is the main node of the Influence messenger network.  
 ## Installation
 
 1. Clone this repo
