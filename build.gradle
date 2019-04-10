@@ -21,13 +21,16 @@ version '0.1'
 
 repositories {
     mavenCentral()
+    maven {
+        url 'http://tomp2p.net/dev/mvn/'
+    }
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation fileTree(include: ['*.jar'], dir: 'libs/tomp2p')
+    implementation 'net.tomp2p:tomp2p-all:5.0-Beta8'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-    implementation 'org.slf4j:slf4j-log4j12:+'
+    implementation 'org.slf4j:slf4j-log4j12:1.7.26'
 }
 
 compileKotlin {

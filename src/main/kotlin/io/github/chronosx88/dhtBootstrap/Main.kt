@@ -1,5 +1,7 @@
 import io.github.chronosx88.dhtBootstrap.StorageBerkeleyDB
-import net.tomp2p.connection.DSASignatureFactory
+import net.tomp2p.connection.Bindings
+import net.tomp2p.connection.ChannelClientConfiguration
+import net.tomp2p.connection.RSASignatureFactory
 import net.tomp2p.dht.PeerBuilderDHT
 import net.tomp2p.dht.PeerDHT
 import net.tomp2p.nat.PeerBuilderNAT
@@ -12,6 +14,7 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileWriter
 import java.io.IOException
+import java.net.InetSocketAddress
 import java.util.*
 
 
@@ -46,16 +49,20 @@ fun main() {
     peerID = Number160.createHash(props!!.getProperty("peerID"))
 
     try {
-        peerDHT = PeerBuilderDHT(PeerBuilder(peerID).ports(7243).start())
-            .storage(
-                StorageBerkeleyDB(
-                    peerID!!,
-                    File(DATA_DIR_PATH),
-                    DSASignatureFactory()
-                )
-            ).start()
+        peerDHT = PeerBuilderDHT(
+            PeerBuilder(peerID)
+                .ports(7243)
+                .channelClientConfiguration(createChannelClientConfig())
+                .start()
+        ).storage(
+            StorageBerkeleyDB(
+                peerID!!,
+                File(DATA_DIR_PATH),
+                RSASignatureFactory()
+            )
+        ).start()
         PeerBuilderNAT(peerDHT!!.peer())
-            .addRelayServerConfiguration(RelayType.OPENTCP, TCPRelayServerConfig())
+            .addRelayServerConfiguration(RelayType.BUFFERED_OPENTCP, TCPRelayServerConfig())
             .start()
     } catch (e: IOException) {
         e.printStackTrace()
@@ -63,4 +70,18 @@ fun main() {
 
     val replication = AutoReplication(peerDHT!!.peer())
     replication.start()
+}
+
+fun createChannelClientConfig() : ChannelClientConfiguration {
+    val channelClientConfiguration = ChannelClientConfiguration()
+    channelClientConfiguration.bindings(Bindings())
+    channelClientConfiguration.maxPermitsPermanentTCP(250)
+    channelClientConfiguration.maxPermitsTCP(250)
+    channelClientConfiguration.maxPermitsUDP(250)
+    channelClientConfiguration.pipelineFilter(PeerBuilder.DefaultPipelineFilter())
+    channelClientConfiguration.signatureFactory(RSASignatureFactory())
+    channelClientConfiguration.senderTCP(InetSocketAddress(0).address)
+    channelClientConfiguration.senderUDP(InetSocketAddress(0).address)
+    channelClientConfiguration.byteBufPool(false)
+    return channelClientConfiguration
 }
