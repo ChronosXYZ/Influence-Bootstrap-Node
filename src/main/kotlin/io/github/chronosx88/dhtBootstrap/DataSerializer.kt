@@ -13,8 +13,7 @@ import java.security.InvalidKeyException
 import java.security.SignatureException
 
 class DataSerializer(private val signatureFactory: SignatureFactory) : EntryBinding<Data>, Serializable {
-    private val LOG_TAG = "DataSerializer"
-    private val LOG = LoggerFactory.getLogger(DataSerializer::class.java)
+    private val log = LoggerFactory.getLogger(DataSerializer::class.java)
 
     override fun entryToObject(databaseEntry: DatabaseEntry): Data? {
         if (databaseEntry.data == null) {
@@ -38,18 +37,12 @@ class DataSerializer(private val signatureFactory: SignatureFactory) : EntryBind
         buf = Unpooled.wrappedBuffer(me)
         var retVal = data.decodeBuffer(buf)
         if (!retVal) {
-            LOG.error("# ERROR: Data could not be deserialized!")
+            log.error("# ERROR: Data could not be deserialized!")
         }
-        /*retVal = data.decodeDone(buf, signatureFactory)
-        if (!retVal) {
-            LOG.error("# ERROR: Signature could not be read!")
-        }*/
         return data
     }
 
     override fun objectToEntry(data: Data, databaseEntry: DatabaseEntry) {
-        val forSigningKP = keyPairManager.getKeyPair("mainSigningKeyPair")
-        data.sign(forSigningKP)
         val out = ByteArrayOutputStream()
         val acb = AlternativeCompositeByteBuf.compBuffer(AlternativeCompositeByteBuf.UNPOOLED_HEAP)
         try {
@@ -91,6 +84,5 @@ class DataSerializer(private val signatureFactory: SignatureFactory) : EntryBind
 
     companion object {
         private const val serialVersionUID = 1428836065493792295L
-        private val keyPairManager = KeyPairManager()
     }
 }
