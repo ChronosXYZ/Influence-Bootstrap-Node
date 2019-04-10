@@ -1,5 +1,4 @@
-package io.github.chronosx88.dhtBootstrap
-
+import io.github.chronosx88.dhtBootstrap.StorageBerkeleyDB
 import net.tomp2p.connection.DSASignatureFactory
 import net.tomp2p.dht.PeerBuilderDHT
 import net.tomp2p.dht.PeerDHT

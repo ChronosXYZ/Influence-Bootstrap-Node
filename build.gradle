@@ -1,47 +1,50 @@
-plugins {
-    id 'java'
-    id 'org.jetbrains.kotlin.jvm' version '1.3.21'
+buildscript {
+    ext.kotlin_version = '1.3.21'
+    
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'com.github.jengelman.gradle.plugins:shadow:4.0.4'
+    }
 }
+
+apply plugin: 'kotlin'
+apply plugin: 'java'
+apply plugin: 'com.github.johnrengelman.shadow'
+
 group 'io.github.chronosx88'
 version '0.1'
 
-task fatJar(type: Jar) {
-    manifest {
-        attributes(
-                'Main-Class': 'io.github.chronosx88.dhtBootstrap.MainKt'
-        )
-    }
-    baseName = project.name + '-all'
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    with jar
-}
-
-sourceCompatibility = 1.8
-
 repositories {
     mavenCentral()
-    /*maven {
-        url "http://tomp2p.net/dev/mvn/"
-    }*/
 }
 
 dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation fileTree(include: ['*.jar'], dir: 'libs/tomp2p')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-    //implementation 'net.tomp2p:tomp2p-all:5.0-Beta8'
     implementation 'org.slf4j:slf4j-log4j12:+'
 }
 
 compileKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
+
 compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
+
 jar {
     manifest {
-        attributes(
-                'Main-Class': 'io.github.chronosx88.dhtBootstrap.MainKt'
-        )
+        attributes 'Main-Class': 'MainKt'
     }
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    from {
+        configurations.compile.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
 }
