@@ -25,4 +25,4 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 Please make sure to update tests as appropriate.
 
 ## License
-This project is licensed under the GNU GPLv3 License - see the [LICENSE.md](https://github.com/ChronosX88/Influence-Bootstrap-Node/blob/master/LICENSE) file for details
+This project is licensed under the GNU GPLv3 License - see the [LICENSE](https://github.com/ChronosX88/Influence-Bootstrap-Node/blob/master/LICENSE) file for details
