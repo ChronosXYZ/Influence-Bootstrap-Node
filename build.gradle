@@ -1,8 +1,18 @@
-plugins {
-    id 'java'
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:4.0.4'
+    }
 }
 
-version '1.0-SNAPSHOT'
+apply plugin: 'java'
+apply plugin: 'com.github.johnrengelman.shadow'
+
+version '0.2'
 
 sourceCompatibility = 1.8
 
