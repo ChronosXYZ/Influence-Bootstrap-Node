@@ -8,6 +8,7 @@ import net.tomp2p.p2p.PeerBuilder;
 import net.tomp2p.peers.Number160;
 import net.tomp2p.relay.RelayType;
 import net.tomp2p.relay.tcp.TCPRelayServerConfig;
+import net.tomp2p.replication.AutoReplication;
 import net.tomp2p.storage.StorageDisk;
 
 import java.io.*;
@@ -58,6 +59,7 @@ public class Main {
             new PeerBuilderNAT(peerDHT.peer())
                     .addRelayServerConfiguration(RelayType.OPENTCP, new TCPRelayServerConfig())
                     .start();
+            new AutoReplication(peerDHT.peer()).start();
         } catch (IOException e) {
             e.printStackTrace();
         }
