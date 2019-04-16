@@ -1,6 +1,6 @@
 package io.github.chronosx88.dhtBootstrap;
 
-import net.tomp2p.connection.RSASignatureFactory;
+import net.tomp2p.connection.*;
 import net.tomp2p.dht.PeerBuilderDHT;
 import net.tomp2p.dht.PeerDHT;
 import net.tomp2p.nat.PeerBuilderNAT;
@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -50,7 +51,7 @@ public class Main {
 
         try {
             peerDHT =
-                    new PeerBuilderDHT(new PeerBuilder(peerID).ports(7243).start())
+                    new PeerBuilderDHT(new PeerBuilder(peerID).ports(7243).channelClientConfiguration(createClientChannelConfig()).channelServerConfiguration(createServerChannelConfig()).start())
                     .storage(
                             new StorageMapDB(
                                     peerID,
@@ -58,6 +59,7 @@ public class Main {
                                     new RSASignatureFactory()
                             )
                     ).start();
+
             new PeerBuilderNAT(peerDHT.peer())
                     .addRelayServerConfiguration(RelayType.OPENTCP, new TCPRelayServerConfig())
                     .start();
@@ -65,5 +67,32 @@ public class Main {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static ChannelClientConfiguration createClientChannelConfig() {
+        ChannelClientConfiguration channelClientConfiguration = new ChannelClientConfiguration();
+        channelClientConfiguration.bindings(new Bindings());
+        channelClientConfiguration.maxPermitsPermanentTCP(250);
+        channelClientConfiguration.maxPermitsTCP(250);
+        channelClientConfiguration.maxPermitsUDP(250);
+        channelClientConfiguration.pipelineFilter(new PeerBuilder.DefaultPipelineFilter());
+        channelClientConfiguration.signatureFactory(new RSASignatureFactory());
+        channelClientConfiguration.senderTCP(new InetSocketAddress(0).getAddress());
+        channelClientConfiguration.senderUDP(new InetSocketAddress(0).getAddress());
+        channelClientConfiguration.byteBufPool(false);
+        return channelClientConfiguration;
+    }
+
+    private static ChannelServerConfiguration createServerChannelConfig() {
+        ChannelServerConfiguration channelServerConfiguration = new ChannelServerConfiguration();
+        channelServerConfiguration.bindings(new Bindings());
+        //these two values may be overwritten in the peer builder
+        channelServerConfiguration.ports(new Ports(Ports.DEFAULT_PORT, Ports.DEFAULT_PORT));
+        channelServerConfiguration.portsForwarding(new Ports(Ports.DEFAULT_PORT, Ports.DEFAULT_PORT));
+        channelServerConfiguration.behindFirewall(false);
+        channelServerConfiguration.pipelineFilter(new PeerBuilder.DefaultPipelineFilter());
+        channelServerConfiguration.signatureFactory(new RSASignatureFactory());
+        channelServerConfiguration.byteBufPool(false);
+        return channelServerConfiguration;
     }
 }
