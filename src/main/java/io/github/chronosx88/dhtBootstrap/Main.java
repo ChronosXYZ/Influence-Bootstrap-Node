@@ -9,7 +9,6 @@ import net.tomp2p.peers.Number160;
 import net.tomp2p.relay.RelayType;
 import net.tomp2p.relay.tcp.TCPRelayServerConfig;
 import net.tomp2p.replication.IndirectReplication;
-import net.tomp2p.storage.StorageDisk;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -53,7 +52,7 @@ public class Main {
             peerDHT =
                     new PeerBuilderDHT(new PeerBuilder(peerID).ports(7243).start())
                     .storage(
-                            new StorageDisk(
+                            new StorageMapDB(
                                     peerID,
                                     new File(DATA_DIR_PATH),
                                     new RSASignatureFactory()
