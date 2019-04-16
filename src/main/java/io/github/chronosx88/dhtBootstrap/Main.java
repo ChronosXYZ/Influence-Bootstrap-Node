@@ -8,10 +8,13 @@ import net.tomp2p.p2p.PeerBuilder;
 import net.tomp2p.peers.Number160;
 import net.tomp2p.relay.RelayType;
 import net.tomp2p.relay.tcp.TCPRelayServerConfig;
-import net.tomp2p.replication.AutoReplication;
+import net.tomp2p.replication.IndirectReplication;
 import net.tomp2p.storage.StorageDisk;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -28,7 +31,7 @@ public class Main {
         File config = new File(DATA_DIR_PATH + "config.properties");
         try {
             if(!dataDir.exists() && !config.exists()) {
-                dataDir.mkdir();
+                dataDir.mkdirs();
                 config.createNewFile();
                 props.setProperty("isFirstRun", "false");
                 props.setProperty("peerID", UUID.randomUUID().toString());
@@ -59,7 +62,7 @@ public class Main {
             new PeerBuilderNAT(peerDHT.peer())
                     .addRelayServerConfiguration(RelayType.OPENTCP, new TCPRelayServerConfig())
                     .start();
-            new AutoReplication(peerDHT.peer()).start();
+            new IndirectReplication(peerDHT).start();
         } catch (IOException e) {
             e.printStackTrace();
         }
