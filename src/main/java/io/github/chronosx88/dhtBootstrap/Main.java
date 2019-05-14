@@ -51,7 +51,11 @@ public class Main {
 
         try {
             peerDHT =
-                    new PeerBuilderDHT(new PeerBuilder(peerID).ports(7243).channelClientConfiguration(createClientChannelConfig()).channelServerConfiguration(createServerChannelConfig()).start())
+                    new PeerBuilderDHT(new PeerBuilder(peerID)
+                            .ports(7243)
+                            .channelClientConfiguration(createClientChannelConfig())
+                            .channelServerConfiguration(createServerChannelConfig())
+                            .start())
                     .storage(
                             new StorageMapDB(
                                     peerID,
@@ -70,29 +74,14 @@ public class Main {
     }
 
     private static ChannelClientConfiguration createClientChannelConfig() {
-        ChannelClientConfiguration channelClientConfiguration = new ChannelClientConfiguration();
-        channelClientConfiguration.bindings(new Bindings());
-        channelClientConfiguration.maxPermitsPermanentTCP(250);
-        channelClientConfiguration.maxPermitsTCP(250);
-        channelClientConfiguration.maxPermitsUDP(250);
-        channelClientConfiguration.pipelineFilter(new PeerBuilder.DefaultPipelineFilter());
+        ChannelClientConfiguration channelClientConfiguration = PeerBuilder.createDefaultChannelClientConfiguration();
         channelClientConfiguration.signatureFactory(new RSASignatureFactory());
-        channelClientConfiguration.senderTCP(new InetSocketAddress(0).getAddress());
-        channelClientConfiguration.senderUDP(new InetSocketAddress(0).getAddress());
-        channelClientConfiguration.byteBufPool(false);
         return channelClientConfiguration;
     }
 
     private static ChannelServerConfiguration createServerChannelConfig() {
-        ChannelServerConfiguration channelServerConfiguration = new ChannelServerConfiguration();
-        channelServerConfiguration.bindings(new Bindings());
-        //these two values may be overwritten in the peer builder
-        channelServerConfiguration.ports(new Ports(Ports.DEFAULT_PORT, Ports.DEFAULT_PORT));
-        channelServerConfiguration.portsForwarding(new Ports(Ports.DEFAULT_PORT, Ports.DEFAULT_PORT));
-        channelServerConfiguration.behindFirewall(false);
-        channelServerConfiguration.pipelineFilter(new PeerBuilder.DefaultPipelineFilter());
+        ChannelServerConfiguration channelServerConfiguration = PeerBuilder.createDefaultChannelServerConfiguration();
         channelServerConfiguration.signatureFactory(new RSASignatureFactory());
-        channelServerConfiguration.byteBufPool(false);
         return channelServerConfiguration;
     }
 }
