@@ -24,6 +24,7 @@ repositories {
 }
 
 dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'net.tomp2p:tomp2p-all:5.0-Beta8'
     implementation 'org.slf4j:slf4j-log4j12:+'
 }
