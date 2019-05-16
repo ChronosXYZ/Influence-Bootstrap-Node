@@ -12,9 +12,7 @@ import net.tomp2p.relay.RelayType;
 import net.tomp2p.relay.tcp.TCPRelayServerConfig;
 import net.tomp2p.replication.IndirectReplication;
 import rice.environment.Environment;
-import rice.pastry.NodeIdFactory;
-import rice.pastry.PastryNode;
-import rice.pastry.PastryNodeFactory;
+import rice.pastry.*;
 import rice.pastry.socket.internet.InternetPastryNodeFactory;
 import rice.pastry.standard.RandomNodeIdFactory;
 
@@ -22,7 +20,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -114,14 +114,16 @@ public class Main {
         PastryNode node = null;
         try {
             node = factory.newNode();
-            pastryNode = node;
         } catch (IOException e) {
             e.printStackTrace();
         }
+        pastryNode = node;
 
-        // in later tutorials, we will register applications before calling boot
-        node.boot(new InetSocketAddress(7244));
-
+        try {
+            node.boot(new InetSocketAddress(InetAddress.getLocalHost().getHostName(), 7244));
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
         // the node may require sending several messages to fully boot into the ring
         synchronized(node) {
             while(!node.isReady() && !node.joinFailed()) {
