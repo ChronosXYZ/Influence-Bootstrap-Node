@@ -96,51 +96,56 @@ public class Main {
     }
 
     private static void createNewPastryBootstrapNode() {
-        Environment env = new Environment();
-        env.getParameters().setString("probe_for_external_address","true");
-        env.getParameters().setString("nat_search_policy","never");
-        // Generate the NodeIds Randomly
-        NodeIdFactory nidFactory = new RandomNodeIdFactory(env);
+        new Thread(() -> {
+            Environment env = new Environment();
+            env.getParameters().setString("probe_for_external_address","true");
+            env.getParameters().setString("nat_search_policy","never");
+            // Generate the NodeIds Randomly
+            NodeIdFactory nidFactory = new RandomNodeIdFactory(env);
 
-        // construct the PastryNodeFactory, this is how we use rice.pastry.socket
-        PastryNodeFactory factory = null;
-        try {
-            factory = new InternetPastryNodeFactory(nidFactory, 7244, env);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            // construct the PastryNodeFactory, this is how we use rice.pastry.socket
+            PastryNodeFactory factory = null;
+            try {
+                factory = new InternetPastryNodeFactory(nidFactory, 7244, env);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-        // construct a node, but this does not cause it to boot
-        PastryNode node = null;
-        try {
-            node = factory.newNode();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        pastryNode = node;
+            // construct a node, but this does not cause it to boot
+            PastryNode node = null;
+            try {
+                node = factory.newNode();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            pastryNode = node;
 
-        try {
-            node.boot(new InetSocketAddress(InetAddress.getLocalHost().getHostName(), 7244));
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-        // the node may require sending several messages to fully boot into the ring
-        synchronized(node) {
-            while(!node.isReady() && !node.joinFailed()) {
-                // delay so we don't busy-wait
-                try {
-                    node.wait(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+            /*try {
+                //node.boot(new InetSocketAddress(InetAddress.getLocalHost().getHostName(), 7244));
 
-                // abort if can't join
-                if (node.joinFailed()) {
-                    System.out.println("[Pastry] Could not join the FreePastry ring.  Reason:"+node.joinFailedReason());
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+            }*/
+            node.boot((Object) null);
+
+            // the node may require sending several messages to fully boot into the ring
+            synchronized(node) {
+                while(!node.isReady() && !node.joinFailed()) {
+                    // delay so we don't busy-wait
+                    try {
+                        node.wait(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    // abort if can't join
+                    if (node.joinFailed()) {
+                        System.out.println("[Pastry] Could not join the FreePastry ring.  Reason:"+node.joinFailedReason());
+                    }
                 }
             }
-        }
 
-        System.out.println("[Pastry] Finished creating new bootstrap node "+node);
+            System.out.println("[Pastry] Finished creating new bootstrap node "+node);
+        }).start();
     }
 }
